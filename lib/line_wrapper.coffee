@@ -72,22 +72,9 @@ class LineWrapper extends EventEmitter
         
         while word.length
           # fit as much of the word as possible into the space we have
-          if w > @spaceLeft
-            # start checking our text at the end of our remaining space - this works around long loops when processing massive text
-            l = Math.ceil(@spaceLeft / (w / word.length))
-            w = @wordWidth word.slice(0, l)
-            mightGrow = w <= @spaceLeft and l < word.length
-          else
-            l = word.length
-          mustShrink = w > @spaceLeft and l > 0
-          while mustShrink or mightGrow
-            if mustShrink
-              w = @wordWidth word.slice(0, --l)
-              mustShrink = w > @spaceLeft and l > 0
-            else
-              w = @wordWidth word.slice(0, ++l)
-              mustShrink = w > @spaceLeft and l > 0
-              mightGrow = w <= @spaceLeft and l < word.length
+          l = word.length
+          while w > @spaceLeft
+            w = @wordWidth word.slice(0, --l)
             
           # send a required break unless this is the last piece
           fbk.required = l < word.length
