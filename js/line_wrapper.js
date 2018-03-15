@@ -72,7 +72,7 @@
     };
 
     LineWrapper.prototype.eachWord = function(text, fn) {
-      var bk, breaker, fbk, l, last, lbk, mightGrow, mustShrink, shouldContinue, w, word, wordWidths;
+      var bk, breaker, fbk, l, last, lbk, shouldContinue, w, word, wordWidths;
       breaker = new LineBreaker(text);
       last = null;
       wordWidths = Object.create(null);
@@ -83,23 +83,9 @@
           lbk = last;
           fbk = {};
           while (word.length) {
-            if (w > this.spaceLeft) {
-              l = Math.ceil(this.spaceLeft / (w / word.length));
-              w = this.wordWidth(word.slice(0, l));
-              mightGrow = w <= this.spaceLeft && l < word.length;
-            } else {
-              l = word.length;
-            }
-            mustShrink = w > this.spaceLeft && l > 0;
-            while (mustShrink || mightGrow) {
-              if (mustShrink) {
-                w = this.wordWidth(word.slice(0, --l));
-                mustShrink = w > this.spaceLeft && l > 0;
-              } else {
-                w = this.wordWidth(word.slice(0, ++l));
-                mustShrink = w > this.spaceLeft && l > 0;
-                mightGrow = w <= this.spaceLeft && l < word.length;
-              }
+            l = word.length;
+            while (w > this.spaceLeft) {
+              w = this.wordWidth(word.slice(0, --l));
             }
             fbk.required = l < word.length;
             shouldContinue = fn(word.slice(0, l), w, fbk, lbk);
